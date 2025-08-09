@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Honeybee Bakehouse — Order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; }
+      form { max-width: 560px; }
+      label { display:block; margin-top: 1rem; font-weight: 600; }
+      input, select, textarea { width:100%; padding:.6rem; margin-top:.4rem; }
+      button { margin-top: 1rem; padding:.7rem 1.1rem; cursor:pointer; }
+    </style>
+  </head>
+  <body>
+    <h1>Place an Order</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <label>Name {{ form.name }}</label>
+      <label>Email {{ form.email }}</label>
+      <label>Phone {{ form.phone }}</label>
+      <label>Pick-up or Delivery {{ form.choice }}</label>
+      <label>Date needed {{ form.date_needed }}</label>
+      <label>Details {{ form.details }}</label>
+      <button type="submit">Submit Order</button>
+    </form>
+  </body>
+</html>

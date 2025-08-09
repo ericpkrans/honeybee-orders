@@ -1,0 +1,14 @@
+notepad .gitignore
+# Python
+__pycache__/
+*.pyc
+
+# venv
+.venv/
+
+# Django
+db.sqlite3
+staticfiles/
+
+# Env
+.env
