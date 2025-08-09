@@ -1,14 +1,15 @@
-notepad .gitignore
-# Python
+# Python / Django
 __pycache__/
 *.pyc
 
-# venv
+# Virtual env
 .venv/
 
-# Django
+# SQLite DB (local dev only)
 db.sqlite3
-staticfiles/
 
-# Env
+# Secrets
 .env
+
+# Static build artifacts
+staticfiles/
