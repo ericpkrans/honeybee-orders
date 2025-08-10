@@ -31,6 +31,7 @@
       header img{width:140px;height:auto;filter: drop-shadow(0 2px 0 rgba(0,0,0,.05));}
       header h1{font-size:clamp(28px,4vw,44px);line-height:1.05;margin:0;text-align:center}
       .sub{margin-top:6px;font-size:1.05rem;color:#3a332b;text-align:center}
+
       .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:22px 0}
       .btn{
         border:none;border-radius:999px;padding:.85rem 1.25rem;font-weight:700;
@@ -42,30 +43,21 @@
       .btn.club{background:var(--club); color:white}
       .btn.download{ background:#fff; border:1px solid #cbbf88 }
 
-      /* Panels & grid */
       .panel{
         background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
-        margin:0;
-        height:100%; display:flex; flex-direction:column;
+        margin:0; height:100%; display:flex; flex-direction:column;
       }
       .grid{display:grid;grid-template-columns:1fr;gap:16px; margin:18px 0}
       @media (min-width:900px){ .grid{grid-template-columns:2fr 1fr} }
       .panel h2{margin:.2rem 0 8px 0}
       footer{margin:26px 0;text-align:center;font-size:.95rem;color:#5b5146}
 
-      /* Audio control */
       .audio-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:-14px}
       .audio-controls button{
         background:var(--sky);color:white;border:none;border-radius:999px;padding:.4rem .7rem;font-weight:700;cursor:pointer
       }
 
-      /* Flavor guide image */
       .flavor-guide{max-width:100%;height:auto;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
-
-      /* Facebook iframe: fill remaining height in panel */
-      #fbPanel { display:flex; flex-direction:column; }
-      .fb-wrap { width:100%; flex:1 1 auto; min-height:250px; display:flex; }
-      #fbFrame { width:100%; border:0; border-radius:8px; flex:1 1 auto; }
     </style>
   </head>
   <body>
@@ -89,12 +81,11 @@
 
       <div class="grid">
         <!-- LEFT: Flavor Guide -->
-        <section id="flavorPanel" class="panel">
+        <section class="panel">
           <h2>Flavor Guide</h2>
           <p>Browse our seasonal lineup and classics.</p>
 
           <img
-            id="flavorImage"
             class="flavor-guide"
             src="{% static 'docs/flavor-guide.jpg' %}"
             alt="Honeybee Bakehouse Flavor Guide"
@@ -114,26 +105,15 @@
           </div>
         </section>
 
-        <!-- RIGHT: Follow Along (Facebook Page Plugin via iframe, no SDK) -->
-        <aside id="fbPanel" class="panel">
-          <h2 id="fbHeading">Follow Along</h2>
-
-          <div class="fb-wrap">
-            <!-- Replace the href below with your canonical Page URL if you set a username.
-                 Using profile.php?id=... works if the page is PUBLIC. -->
-            <iframe
-              id="fbFrame"
-              title="Honeybee Bakehouse on Facebook"
-              scrolling="yes"
-              allowtransparency="true"
-              allow="encrypted-media"
-              src="https://www.facebook.com/plugins/page.php?href={{ 'https://www.facebook.com/profile.php?id=61576102571602'|urlencode }}&tabs=timeline&width=500&height=450&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
-            ></iframe>
+        <!-- RIGHT: Follow Along (simple button to personal profile) -->
+        <aside class="panel">
+          <h2>Follow Along</h2>
+          <p>Weekly flavors, behind-the-scenes, and giveaways.</p>
+          <div style="margin-top:auto;">
+            <a class="btn" href="https://www.facebook.com/profile.php?id=61576102571602" target="_blank" rel="noopener">
+              Open Facebook
+            </a>
           </div>
-
-          <p id="fbNote" style="font-size:.95rem;color:#6a5f54;margin-top:10px;">
-            Weekly flavors, behind-the-scenes, and giveaways.
-          </p>
         </aside>
       </div>
 
@@ -180,36 +160,6 @@
           updateButton();
         }
       });
-
-      // --- Make Facebook iframe match Flavor panel height ---
-      function resizeFBHeight(){
-        const fbPanel = document.getElementById('fbPanel');
-        const heading = document.getElementById('fbHeading');
-        const note = document.getElementById('fbNote');
-        const frame = document.getElementById('fbFrame');
-        if (!fbPanel || !heading || !note || !frame) return;
-
-        const panelHeight = fbPanel.clientHeight;
-        const used = heading.offsetHeight + note.offsetHeight + 32; // padding/spacing allowance
-        const available = Math.max(300, panelHeight - used);
-
-        // Update iframe src height param & CSS height
-        const url = new URL(frame.src);
-        if (url.searchParams.get('height') !== String(available)) {
-          url.searchParams.set('height', String(available));
-          frame.src = url.toString();
-        }
-        frame.style.height = available + 'px';
-      }
-
-      const flavorImg = document.getElementById('flavorImage');
-      if (flavorImg && !flavorImg.complete) {
-        flavorImg.addEventListener('load', () => setTimeout(resizeFBHeight, 100));
-      } else {
-        setTimeout(resizeFBHeight, 100);
-      }
-      window.addEventListener('load', () => setTimeout(resizeFBHeight, 150));
-      window.addEventListener('resize', () => setTimeout(resizeFBHeight, 150));
     </script>
   </body>
 </html>
