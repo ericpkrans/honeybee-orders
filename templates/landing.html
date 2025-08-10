@@ -18,13 +18,13 @@
 
   <style>
     :root{
-      --bg:#d9d9d9;          /* page background (light gray) */
-      --ink:#1f1b16;         /* text color */
-      --order:#a3c1ad;       /* Cambridge Blue for Order Now */
-      --club:#7393B3;        /* Blue Gray for Club button */
-      --sky:#7AA6D6;         /* audio control button */
-      --card:white;          /* card bg */
-      --ink-soft:#3a332b;    /* softer body text */
+      --bg:#d9d9d9;
+      --ink:#1f1b16;
+      --order:#a3c1ad;
+      --club:#7393B3;
+      --sky:#7AA6D6;
+      --card:white;
+      --ink-soft:#3a332b;
       --border:rgba(0,0,0,.06);
     }
     *{box-sizing:border-box}
@@ -57,28 +57,23 @@
     .panel h2{margin:.2rem 0 4px 0}
     .muted{color:#6a5f54}
 
-    /* Two-column section (Flavor Guide + Follow Along) */
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
     @media (min-width:900px){
       .grid{grid-template-columns:2fr 1fr;align-items:stretch}
       .grid .panel{height:100%}
     }
 
-    /* Audio control */
     .audio-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:-8px}
     .audio-controls button{
       background:var(--sky);color:white;border:none;border-radius:999px;padding:.4rem .7rem;font-weight:700;cursor:pointer
     }
 
-    /* Images */
     .flavor-guide{max-width:100%;height:auto;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
 
-    /* Facebook button (compact with logo) */
     .btn.icon { display:inline-flex; align-items:center; gap:8px; line-height:1; padding:.75rem 1rem; }
     .btn.fb { background:#1877F2; color:#fff; }
     .btn.fb svg { width:18px; height:18px; display:block; }
 
-    /* Lists */
     ul.clean{margin:8px 0 0 0; padding-left:1.1rem}
     ul.clean li{margin:.35rem 0}
     .kicker{font-weight:700}
@@ -92,20 +87,17 @@
       <button id="muteBtn" aria-label="Toggle music">Unmute ♪</button>
     </div>
 
-    <!-- Header -->
     <header>
       <img src="{% static 'img/logo-v2.png' %}" alt="Honeybee Bakehouse logo" loading="eager" fetchpriority="high">
       <h1 class="headline">Welcome to the Honeybee Bakehouse</h1>
       <p class="sub">Southern cupcakes & cookies made from scratch in Bellevue, Nebraska.</p>
     </header>
 
-    <!-- Primary CTAs -->
     <div class="cta">
       <a class="btn order" href="{% url 'home' %}">Order Now</a>
       <a class="btn club" href="{% url 'rewards' %}">Join Southern Sweets Club</a>
     </div>
 
-    <!-- About -->
     <section class="panel">
       <h2>A Taste of Home</h2>
       <p>Hey y’all, I’m Kelly—a mama of five with a heart full of faith, a home full of love, and an oven always ready to share something sweet. At Honeybee Bakehouse, everything’s homemade with love (and a little sass), right here in my country kitchen. I use local ingredients, bake in small batches, and keep things simple and sweet.</p>
@@ -121,33 +113,17 @@
       </ul>
     </section>
 
-    <!-- Flavor Guide + Follow Along -->
     <div class="grid">
-      <!-- LEFT: Flavor Guide -->
       <section class="panel">
         <h2>Flavor Guide</h2>
         <p class="muted">Browse our seasonal lineup and classics.</p>
-
-        <img
-          class="flavor-guide"
-          src="{% static 'docs/flavor-guide.jpg' %}"
-          alt="Honeybee Bakehouse Flavor Guide"
-          loading="eager"
-          fetchpriority="high"
-        >
-
+        <img class="flavor-guide" src="{% static 'docs/flavor-guide.jpg' %}" alt="Honeybee Bakehouse Flavor Guide" loading="eager" fetchpriority="high">
         <div class="cta" style="margin-top:12px">
           <a class="btn order" href="{% url 'home' %}">Order Now</a>
-          <a
-            class="btn download"
-            href="{% static 'docs/flavor-guide.jpg' %}"
-            download="Honeybee-Flavor-Guide.jpg"
-            aria-label="Download the Honeybee Bakehouse Flavor Guide as a JPG"
-          >⬇️ Download flavor guide</a>
+          <a class="btn download" href="{% static 'docs/flavor-guide.jpg' %}" download="Honeybee-Flavor-Guide.jpg" aria-label="Download the Honeybee Bakehouse Flavor Guide as a JPG">⬇️ Download flavor guide</a>
         </div>
       </section>
 
-      <!-- RIGHT: Follow Along -->
       <aside class="panel">
         <h2>Follow Along</h2>
         <p class="muted" style="margin-top:4px">Weekly flavors, behind-the-scenes, and giveaways.</p>
@@ -159,21 +135,22 @@
             Open Facebook
           </a>
         </div>
+
+        <div style="margin-top:16px;">
+          <h3 style="margin:0; display:flex; align-items:center; gap:6px">
+            Kind Words
+            <span aria-hidden="true" style="color:#FFD700; font-size:1rem;">★★★★★</span>
+          </h3>
+          <blockquote class="muted" style="margin:8px 0">
+            “I want to dive face first into a swimming pool filled with her icing.” — <strong>Vicky C.</strong>
+          </blockquote>
+          <blockquote class="muted" style="margin:0">
+            “The icing is incredible. I’m never going back to store-bought.” — <strong>Amanda G.</strong>
+          </blockquote>
+        </div>
       </aside>
     </div>
 
-    <!-- Testimonials -->
-    <section class="panel">
-      <h2>Kind Words</h2>
-      <blockquote class="muted" style="margin:0 0 8px 0">
-        “I want to dive face first into a swimming pool filled with her icing.” — <strong>Vicky C.</strong>
-      </blockquote>
-      <blockquote class="muted" style="margin:0">
-        “The icing is incredible. I’m never going back to store-bought.” — <strong>Amanda G.</strong>
-      </blockquote>
-    </section>
-
-    <!-- Badge -->
     <p class="muted" style="text-align:center;margin:8px 0 0;">
       <span class="badge">🐝 Made with love in overalls</span>
     </p>
@@ -183,7 +160,6 @@
     </footer>
   </div>
 
-  <!-- Theme music -->
   <audio id="theme" src="{% static 'audio/theme.mp3' %}" preload="auto" autoplay muted loop></audio>
 
   <script>
