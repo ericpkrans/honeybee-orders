@@ -18,11 +18,11 @@
 
     <style>
       :root{
-        --bg:#f3e1b0;          /* warm bakery paper */
-        --ink:#1f1b16;         /* dark ink */
-        --honey:#F2C94C;       /* honey yellow */
-        --leaf:#5C8D4B;        /* leafy green */
-        --sky:#7AA6D6;         /* sky blue */
+        --bg:#d9d9d9;          /* page background (light gray) */
+        --ink:#1f1b16;         /* text color */
+        --order:#a3c1ad;       /* Cambridge Blue for Order Now */
+        --club:#7393B3;        /* Blue Gray for Club button */
+        --sky:#7AA6D6;         /* audio control button */
       }
       *{box-sizing:border-box}
       html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Quicksand", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;}
@@ -38,25 +38,43 @@
         box-shadow:0 2px 0 rgba(0,0,0,.08);
       }
       .btn:hover{transform:translateY(-1px)}
-      .btn.order{background:var(--honey)}
-      .btn.club{background:var(--leaf);color:white}
-      .btn.download{ background:#fff; border:1px solid #e5d08f }
+      .btn.order{background:var(--order); color:#0f1b14}
+      .btn.club{background:var(--club); color:white}
+      .btn.download{ background:#fff; border:1px solid #cbbf88 }
 
+      /* Panels & grid */
       .panel{
         background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
-        margin:18px 0;
+        /* Remove vertical margins so both columns align perfectly */
+        margin:0;
+        /* Make panel stretch to full row height and allow inner flex */
+        height:100%; display:flex; flex-direction:column;
       }
-      .grid{display:grid;grid-template-columns:1fr;gap:16px}
+      .grid{display:grid;grid-template-columns:1fr;gap:16px; margin:18px 0}
       @media (min-width:900px){ .grid{grid-template-columns:2fr 1fr} }
       .panel h2{margin:.2rem 0 8px 0}
-      .social a{display:inline-flex;align-items:center;gap:8px;margin-right:10px;color:inherit;text-decoration:none}
-      .social svg{width:22px;height:22px}
       footer{margin:26px 0;text-align:center;font-size:.95rem;color:#5b5146}
+
+      /* Audio control */
       .audio-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:-14px}
       .audio-controls button{
         background:var(--sky);color:white;border:none;border-radius:999px;padding:.4rem .7rem;font-weight:700;cursor:pointer
       }
+
+      /* Flavor guide image */
       .flavor-guide{max-width:100%;height:auto;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+
+      /* Facebook embed: responsive + fill remaining height */
+      #fbPanel { display:flex; flex-direction:column; }
+      .fb-wrap { width: 100%; display:flex; flex:1 1 auto; min-height:200px; }
+      .panel .fb-page,
+      .panel .fb_iframe_widget,
+      .panel .fb_iframe_widget span,
+      .panel .fb_iframe_widget iframe {
+        width: 100% !important;
+        border-radius: 8px;
+      }
+      .panel .fb_iframe_widget { margin-bottom: 0 !important; }
     </style>
   </head>
   <body>
@@ -79,11 +97,13 @@
       </div>
 
       <div class="grid">
-        <section class="panel">
+        <!-- LEFT: Flavor Guide -->
+        <section id="flavorPanel" class="panel">
           <h2>Flavor Guide</h2>
           <p>Browse our seasonal lineup and classics.</p>
 
           <img
+            id="flavorImage"
             class="flavor-guide"
             src="{% static 'docs/flavor-guide.jpg' %}"
             alt="Honeybee Bakehouse Flavor Guide"
@@ -103,16 +123,35 @@
           </div>
         </section>
 
-        <aside class="panel">
-          <h2>Follow Along</h2>
-          <p class="social">
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/profile.php?id=61576102571602" target="_blank" rel="noopener" aria-label="Facebook">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.01 3.66 9.16 8.44 9.94v-7.03H7.9V12.1h2.54V9.86c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.9h2.78l-.44 2.87h-2.34v7.03C18.34 21.22 22 17.07 22 12.06z"/></svg>
-              Facebook
-            </a>
+        <!-- RIGHT: Follow Along (Facebook Page Plugin) -->
+        <aside id="fbPanel" class="panel">
+          <h2 id="fbHeading">Follow Along</h2>
+
+          <div class="fb-wrap">
+            <div
+              id="fbPage"
+              class="fb-page"
+              data-href="https://www.facebook.com/profile.php?id=61576102571602"
+              data-tabs="timeline"
+              data-width="500"
+              data-height="450"     <!-- initial, will be resized by JS -->
+              data-small-header="true"
+              data-adapt-container-width="true"
+              data-hide-cover="false"
+              data-show-facepile="false">
+              <blockquote
+                cite="https://www.facebook.com/profile.php?id=61576102571602"
+                class="fb-xfbml-parse-ignore">
+                <a href="https://www.facebook.com/profile.php?id=61576102571602">
+                  Honeybee Bakehouse on Facebook
+                </a>
+              </blockquote>
+            </div>
+          </div>
+
+          <p id="fbNote" style="font-size:.95rem;color:#6a5f54;margin-top:10px;">
+            Weekly flavors, behind-the-scenes, and giveaways.
           </p>
-          <p style="font-size:.95rem;color:#6a5f54">Weekly flavors, behind-the-scenes, and giveaways.</p>
         </aside>
       </div>
 
@@ -121,10 +160,17 @@
       </footer>
     </div>
 
+    <!-- Facebook SDK (load once, async) -->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0">
+    </script>
+
     <!-- Theme music -->
     <audio id="theme" src="{% static 'audio/theme.mp3' %}" preload="auto" autoplay muted loop></audio>
 
     <script>
+      // Audio toggle
       const audio = document.getElementById('theme');
       const btn = document.getElementById('muteBtn');
 
@@ -157,6 +203,50 @@
         } finally {
           updateButton();
         }
+      });
+
+      // --- Facebook panel height sync with Flavor panel ---
+      function resizeFBHeight(){
+        const fbPanel = document.getElementById('fbPanel');
+        const heading = document.getElementById('fbHeading');
+        const note = document.getElementById('fbNote');
+        const fbPage = document.getElementById('fbPage');
+
+        if (!fbPanel || !heading || !note || !fbPage) return;
+
+        // Available height inside the panel for the FB widget
+        const panelHeight = fbPanel.clientHeight;
+        const used = heading.offsetHeight + note.offsetHeight + 32; // 32px approx spacing/padding
+        const available = Math.max(250, panelHeight - used);
+
+        // Update the data-height and ask Facebook to re-render
+        const current = parseInt(fbPage.getAttribute('data-height') || '0', 10);
+        if (Math.abs(available - current) > 10) { // avoid thrashing
+          fbPage.setAttribute('data-height', String(available));
+          if (window.FB && FB.XFBML && FB.XFBML.parse) {
+            FB.XFBML.parse(fbPanel);
+          }
+        }
+      }
+
+      // Recalculate when the flavor image loads (so left column height is known)
+      const flavorImg = document.getElementById('flavorImage');
+      if (flavorImg && !flavorImg.complete) {
+        flavorImg.addEventListener('load', () => {
+          setTimeout(resizeFBHeight, 100);
+        });
+      } else {
+        // image already loaded from cache
+        setTimeout(resizeFBHeight, 100);
+      }
+
+      // Recalculate after FB SDK is ready (it sets FB global)
+      window.addEventListener('load', () => {
+        setTimeout(resizeFBHeight, 200);
+      });
+      // And on window resize
+      window.addEventListener('resize', () => {
+        setTimeout(resizeFBHeight, 150);
       });
     </script>
   </body>
