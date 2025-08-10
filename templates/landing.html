@@ -1,3 +1,7 @@
+{% load static %}
+{% static 'img/logo.png' as logo_url %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ logo_url }}" />
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -101,7 +105,7 @@
     </div>
 
     <!-- Theme music (muted autoplay to satisfy browsers). Replace file path once you add your mp3. -->
-    <audio id="theme" src="{% static 'audio/theme.mp3' %}" autoplay muted loop></audio>
+    <audio id="theme" src="{% static 'audio/theme.m4a' %}" autoplay muted loop></audio>
     <script>
       const audio = document.getElementById('theme');
       const btn = document.getElementById('muteBtn');
