@@ -1,165 +1,158 @@
 {% load static %}
-{% static 'img/logo-v2.png' as logo_path %}
+{% static 'img/logo.png' as logo_url %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ logo_url }}" />
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Honeybee Bakehouse — Cupcakes & Cookies</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8" />
+  <title>Honeybee Bakehouse — Cupcakes & Cookies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Open Graph (absolute logo URL for previews) -->
-    <meta property="og:title" content="Honeybee Bakehouse — Cupcakes & Cookies" />
-    <meta property="og:description" content="Order small-batch cupcakes & cookies. Join the Southern Sweets Club for 6 FREE snickerdoodles." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ logo_path }}" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Honeybee Bakehouse — Cupcakes & Cookies" />
+  <meta property="og:description" content="Order small-batch cupcakes & cookies. Join the Southern Sweets Club for 6 FREE snickerdoodles." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="{{ request.build_absolute_uri }}static/img/logo.png" />
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
-    <style>
-      :root{
-        --bg:#d9d9d9;          /* page background (light gray) */
-        --ink:#1f1b16;         /* text color */
-        --order:#a3c1ad;       /* Cambridge Blue for Order Now */
-        --club:#7393B3;        /* Blue Gray for Club button */
-        --sky:#7AA6D6;         /* audio control button */
-      }
-      *{box-sizing:border-box}
-      html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Quicksand", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;}
-      .wrap{max-width:960px;margin:0 auto;padding:24px}
-      header{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px}
-      header img{width:140px;height:auto;filter: drop-shadow(0 2px 0 rgba(0,0,0,.05));}
-      header h1{font-size:clamp(28px,4vw,44px);line-height:1.05;margin:0;text-align:center}
-      .sub{margin-top:6px;font-size:1.05rem;color:#3a332b;text-align:center}
+  <style>
+    :root{
+      --bg:#d9d9d9;          /* light gray page background */
+      --ink:#1f1b16;         /* dark ink */
+      --honey:#a3c1ad;       /* Cambridge Blue for Order Now */
+      --leaf:#7393B3;        /* Blue Gray for Club button */
+      --sky:#7AA6D6;         /* sky blue (unused here) */
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;
+      background:var(--bg);color:var(--ink);
+      font-family:"Quicksand", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    .wrap{max-width:960px;margin:0 auto;padding:24px}
+    header{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px}
+    header img{width:140px;height:auto;filter: drop-shadow(0 2px 0 rgba(0,0,0,.05));}
+    header h1{font-size:clamp(28px,4vw,44px);line-height:1.05;margin:0;text-align:center}
+    .sub{margin-top:6px;font-size:1.05rem;color:#3a332b;text-align:center}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:22px 0}
+    .btn{
+      border:none;border-radius:999px;padding:.85rem 1.25rem;font-weight:700;
+      cursor:pointer;text-decoration:none;color:var(--ink);background:white;
+      box-shadow:0 2px 0 rgba(0,0,0,.08);
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.order{background:var(--honey)}
+    .btn.club{background:var(--leaf);color:white}
+    .panel{
+      background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
+      margin:18px 0;display:flex;flex-direction:column;justify-content:flex-start;
+    }
+    .grid{
+      display:grid;grid-template-columns:1fr;gap:16px;
+    }
+    @media (min-width:900px){
+      .grid{grid-template-columns:2fr 1fr;align-items:stretch;}
+      .grid .panel{height:100%;}
+    }
+    .panel h2{margin:.2rem 0 8px 0}
+    footer{margin:26px 0;text-align:center;font-size:.95rem;color:#5b5146}
+    .audio-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:-14px}
+    .audio-controls button{
+      background:var(--sky);color:white;border:none;border-radius:999px;padding:.4rem .7rem;font-weight:700;cursor:pointer
+    }
 
-      .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:22px 0}
-      .btn{
-        border:none;border-radius:999px;padding:.85rem 1.25rem;font-weight:700;
-        cursor:pointer;text-decoration:none;color:var(--ink);background:white;
-        box-shadow:0 2px 0 rgba(0,0,0,.08);
-      }
-      .btn:hover{transform:translateY(-1px)}
-      .btn.order{background:var(--order); color:#0f1b14}
-      .btn.club{background:var(--club); color:white}
-      .btn.download{ background:#fff; border:1px solid #cbbf88 }
-
-      .panel{
-        background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
-        margin:0; height:100%; display:flex; flex-direction:column;
-      }
-      .grid{display:grid;grid-template-columns:1fr;gap:16px; margin:18px 0}
-      @media (min-width:900px){ .grid{grid-template-columns:2fr 1fr} }
-      .panel h2{margin:.2rem 0 8px 0}
-      footer{margin:26px 0;text-align:center;font-size:.95rem;color:#5b5146}
-
-      .audio-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:-14px}
-      .audio-controls button{
-        background:var(--sky);color:white;border:none;border-radius:999px;padding:.4rem .7rem;font-weight:700;cursor:pointer
-      }
-
-      .flavor-guide{max-width:100%;height:auto;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <div class="audio-controls">
-        <button id="muteBtn" aria-label="Toggle music">Unmute ♪</button>
-      </div>
-
-      <header>
-        <img src="{% static 'img/logo-v2.png' %}" alt="Honeybee Bakehouse logo" loading="eager" fetchpriority="high">
-        <div>
-          <h1>Honeybee Bakehouse</h1>
-          <p class="sub">Cupcakes & Cookies • Small-batch • Made with love</p>
-        </div>
-      </header>
-
-      <div class="cta">
-        <a class="btn order" href="{% url 'home' %}">Order Now</a>
-        <a class="btn club" href="{% url 'rewards' %}">Join Southern Sweets Club</a>
-      </div>
-
-      <div class="grid">
-        <!-- LEFT: Flavor Guide -->
-        <section class="panel">
-          <h2>Flavor Guide</h2>
-          <p>Browse our seasonal lineup and classics.</p>
-
-          <img
-            class="flavor-guide"
-            src="{% static 'docs/flavor-guide.jpg' %}"
-            alt="Honeybee Bakehouse Flavor Guide"
-            loading="eager"
-            fetchpriority="high"
-          >
-
-          <div style="margin-top:12px;">
-            <a
-              class="btn download"
-              href="{% static 'docs/flavor-guide.jpg' %}"
-              download="Honeybee-Flavor-Guide.jpg"
-              aria-label="Download the Honeybee Bakehouse Flavor Guide as a JPG"
-            >
-              ⬇️ Download flavor guide
-            </a>
-          </div>
-        </section>
-
-        <!-- RIGHT: Follow Along (simple button to personal profile) -->
-        <aside class="panel">
-          <h2>Follow Along</h2>
-          <p>Weekly flavors, behind-the-scenes, and giveaways.</p>
-          <div style="margin-top:auto;">
-            <a class="btn" href="https://www.facebook.com/profile.php?id=61576102571602" target="_blank" rel="noopener">
-              Open Facebook
-            </a>
-          </div>
-        </aside>
-      </div>
-
-      <footer>
-        © {% now "Y" %} Honeybee Bakehouse • Join the <strong>Southern Sweets Club</strong> for 6 free snickerdoodles
-      </footer>
+    /* Facebook panel compact + logo button */
+    .btn.icon {
+      display:inline-flex; align-items:center; gap:8px;
+      line-height:1; padding:.75rem 1rem;
+    }
+    .btn.fb { background:#1877F2; color:#fff; }
+    .btn.fb svg { width:18px; height:18px; display:block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="audio-controls">
+      <button id="muteBtn" aria-label="Toggle music">Unmute ♪</button>
     </div>
 
-    <!-- Theme music -->
-    <audio id="theme" src="{% static 'audio/theme.mp3' %}" preload="auto" autoplay muted loop></audio>
+    <header>
+      <img src="{% static 'img/logo.png' %}" alt="Honeybee Bakehouse logo">
+      <div>
+        <h1>Honeybee Bakehouse</h1>
+        <p class="sub">Cupcakes & Cookies • Small-batch • Made with love</p>
+      </div>
+    </header>
 
-    <script>
-      // Audio toggle
-      const audio = document.getElementById('theme');
-      const btn = document.getElementById('muteBtn');
+    <div class="cta">
+      <a class="btn order" href="{% url 'home' %}">Order Now</a>
+      <a class="btn club" href="{% url 'rewards' %}">Join Southern Sweets Club</a>
+    </div>
 
-      function updateButton(){
-        btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
-      }
+    <div class="grid">
+      <!-- LEFT: Flavor Guide -->
+      <section class="panel">
+        <h2>Flavor Guide</h2>
+        <p>Browse our seasonal lineup and classics.</p>
+        <img src="{% static 'docs/flavor-guide.jpg' %}" 
+             alt="Honeybee Bakehouse Flavor Guide" 
+             style="max-width:100%; height:auto; border-radius:8px; margin-top:auto;">
+      </section>
 
-      window.addEventListener('DOMContentLoaded', async () => {
-        try {
-          audio.muted = true;                 // muted autoplay should be allowed
-          await audio.play().catch(()=>{});
-        } finally {
-          updateButton();
-        }
-      });
+      <!-- RIGHT: Follow Along (compact, logo button) -->
+      <aside class="panel">
+        <h2>Follow Along</h2>
+        <p style="margin-top:4px">Weekly flavors, behind-the-scenes, and giveaways.</p>
 
-      btn.addEventListener('click', async () => {
-        try {
-          if (audio.muted) {
-            audio.muted = false;              // user gesture -> allowed
-            audio.currentTime = audio.currentTime || 0;
-            await audio.play();
-          } else {
-            audio.muted = true;
-            audio.pause();
-          }
-        } catch (e) {
-          console.warn('Playback failed:', e);
+        <div style="margin-top:10px">
+          <a class="btn icon fb" href="https://www.facebook.com/profile.php?id=61576102571602" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor">
+              <path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.01 3.66 9.16 8.44 9.94v-7.03H7.9V12.1h2.54V9.86c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.9h2.78l-.44 2.87h-2.34v7.03C18.34 21.22 22 17.07 22 12.06z"/>
+            </svg>
+            Open Facebook
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © {% now "Y" %} Honeybee Bakehouse • Join the <strong>Southern Sweets Club</strong> for 6 free snickerdoodles
+    </footer>
+  </div>
+
+  <!-- Theme music -->
+  <audio id="theme" src="{% static 'audio/theme.mp3' %}" autoplay muted loop></audio>
+  <script>
+    const audio = document.getElementById('theme');
+    const btn = document.getElementById('muteBtn');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      audio.muted = true;
+      audio.play().catch(()=>{});
+      update();
+    });
+
+    function update(){
+      btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
+    }
+
+    btn.addEventListener('click', async () => {
+      try {
+        if (audio.muted) {
+          audio.muted = false;
+          await audio.play();
+        } else {
           audio.muted = true;
-        } finally {
-          updateButton();
+          audio.pause();
         }
-      });
-    </script>
-  </body>
+      } catch(e) {
+        audio.muted = true;
+      }
+      update();
+    });
+  </script>
+</body>
 </html>
