@@ -1,7 +1,4 @@
 {% load static %}
-{% static 'img/logo.png' as logo_url %}
-<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ logo_url }}" />
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -13,132 +10,67 @@
     <meta property="og:title" content="Honeybee Bakehouse — Cupcakes & Cookies" />
     <meta property="og:description" content="Order small-batch cupcakes & cookies. Join the Southern Sweets Club for 6 FREE snickerdoodles." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="{{ request.build_absolute_uri }}static/img/logo.png" />
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Absolute URL for previews -->
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}" />
 
     <style>
-      :root{
-        --bg:#f3e1b0;          /* warm bakery paper */
-        --ink:#1f1b16;         /* dark ink */
-        --honey:#F2C94C;       /* honey yellow */
-        --leaf:#5C8D4B;        /* leafy green */
-        --sky:#7AA6D6;         /* sky blue */
-      }
-      *{box-sizing:border-box}
-      html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Quicksand", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;}
-      .wrap{max-width:960px;margin:0 auto;padding:24px}
-      header{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px}
-      header img{width:140px;height:auto;filter: drop-shadow(0 2px 0 rgba(0,0,0,.05));}
-      header h1{font-size:clamp(28px,4vw,44px);line-height:1.05;margin:0;text-align:center}
-      .sub{margin-top:6px;font-size:1.05rem;color:#3a332b;text-align:center}
-      .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:22px 0}
-      .btn{
-        border:none;border-radius:999px;padding:.85rem 1.25rem;font-weight:700;
-        cursor:pointer;text-decoration:none;color:var(--ink);background:white;
-        box-shadow:0 2px 0 rgba(0,0,0,.08);
-      }
-      .btn:hover{transform:translateY(-1px)}
-      .btn.order{background:var(--honey)}
-      .btn.club{background:var(--leaf);color:white}
-      .panel{
-        background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
-        margin:18px 0;
-      }
-      .grid{display:grid;grid-template-columns:1fr;gap:16px}
-      @media (min-width:900px){ .grid{grid-template-columns:2fr 1fr} }
-      .panel h2{margin:.2rem 0 8px 0}
-      .social a{display:inline-flex;align-items:center;gap:8px;margin-right:10px;color:inherit;text-decoration:none}
-      .social svg{width:22px;height:22px}
-      footer{margin:26px 0;text-align:center;font-size:.95rem;color:#5b5146}
-      .audio-controls{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:-14px}
-      .audio-controls button{
-        background:var(--sky);color:white;border:none;border-radius:999px;padding:.4rem .7rem;font-weight:700;cursor:pointer
-      }
+      .container{max-width:1100px;margin:0 auto;padding:16px}
+      .flavor-guide{width:100%;height:auto;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+      .audio-gate{position:fixed;inset:auto 16px 16px auto;background:#fff8e1;border:1px solid #f5d36b;border-radius:999px;padding:10px 14px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;gap:10px;align-items:center}
+      .hidden{display:none}
+      .btn{cursor:pointer;border:none;border-radius:999px;padding:8px 14px;background:#222;color:#fff;font-weight:600}
+      .btn:focus{outline:2px solid #f5d36b;outline-offset:2px}
     </style>
   </head>
+
   <body>
-    <div class="wrap">
-      <div class="audio-controls">
-        <button id="muteBtn" aria-label="Toggle music">Unmute ♪</button>
-      </div>
+    <div class="container">
+      <!-- Hero / headline etc. -->
 
-      <header>
-        <img src="{% static 'img/logo.png' %}" alt="Honeybee Bakehouse logo">
-        <div>
-          <h1>Honeybee Bakehouse</h1>
-          <p class="sub">Cupcakes & Cookies • Small-batch • Made with love</p>
-        </div>
-      </header>
-
-      <div class="cta">
-        <a class="btn order" href="{% url 'home' %}">Order Now</a>
-        <a class="btn club" href="{% url 'rewards' %}">Join Southern Sweets Club</a>
-      </div>
-
-      <div class="grid">
-        <section class="panel">
-            <h2>Flavor Guide</h2>
-            <p>Browse our seasonal lineup and classics.</p>
-            <img src="{% static 'guide/flavor-guide.jpg' %}" 
-                alt="Honeybee Bakehouse Flavor Guide" 
-                style="max-width:100%; height:auto; border-radius:8px;">
-        </section>
-
-
-        <aside class="panel">
-          <h2>Follow Along</h2>
-          <p class="social">
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/profile.php?id=61576102571602" target="_blank" rel="noopener" aria-label="Facebook">
-              <!-- tiny FB icon -->
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.01 3.66 9.16 8.44 9.94v-7.03H7.9V12.1h2.54V9.86c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.9h2.78l-.44 2.87h-2.34v7.03C18.34 21.22 22 17.07 22 12.06z"/></svg>
-              Facebook
-            </a>
-          </p>
-          <p style="font-size:.95rem;color:#6a5f54">Weekly flavors, behind-the-scenes, and giveaways.</p>
-        </aside>
-      </div>
-
-      <footer>
-        © {% now "Y" %} Honeybee Bakehouse • Join the <strong>Southern Sweets Club</strong> for 6 free snickerdoodles
-      </footer>
+      <!-- Flavor Guide shows immediately on page load -->
+      <figure style="margin:24px 0">
+        <img
+          class="flavor-guide"
+          src="{% static 'docs/flavor-guide.jpg' %}"
+          alt="Honeybee Bakehouse Flavor Guide"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption style="font-size:.9rem;color:#555;margin-top:8px">
+          Our current flavors at a glance.
+        </figcaption>
+      </figure>
     </div>
 
-    <!-- Theme music (muted autoplay to satisfy browsers). Replace file path once you add your mp3. -->
-    <audio id="theme" src="{% static 'audio/theme.mp3' %}" autoplay muted loop></audio>
+    <!-- Theme music -->
+    <audio id="theme" src="{% static 'audio/theme.mp3' %}" preload="auto"></audio>
+
+    <!-- Autoplay fallback (shown only if browser blocks autoplay with sound) -->
+    <div id="audio-gate" class="audio-gate hidden" role="dialog" aria-live="polite">
+      🎵 Want music?
+      <button id="playBtn" class="btn" type="button">Play theme</button>
+    </div>
+
     <script>
-  const audio = document.getElementById('theme');
-  const btn = document.getElementById('muteBtn');
-
-  // Try to start playback muted on load (OK per browser policies)
-  window.addEventListener('DOMContentLoaded', () => {
-    audio.muted = true;
-    audio.play().catch(()=>{ /* ignore autoplay errors */ });
-    update();
-  });
-
-  function update(){
-    btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
-  }
-
-  btn.addEventListener('click', async () => {
-    try {
-      if (audio.muted) {
-        audio.muted = false;
-        await audio.play();   // user gesture -> allowed
-      } else {
-        audio.muted = true;
-        audio.pause();
-      }
-    } catch(e) {
-      // If it still fails, keep it muted and update the label
-      audio.muted = true;
-    }
-    update();
-  });
-</script>
-
+      // Try to play on load; if blocked, show a one-click Play button.
+      document.addEventListener('DOMContentLoaded', async () => {
+        const audio = document.getElementById('theme');
+        const gate  = document.getElementById('audio-gate');
+        try {
+          await audio.play(); // Many browsers will block this if not muted/user-initiated
+        } catch (err) {
+          gate.classList.remove('hidden');
+          document.getElementById('playBtn').addEventListener('click', async () => {
+            try {
+              await audio.play();
+              gate.classList.add('hidden');
+            } catch (e) {
+              // keep the button visible if it still fails
+              console.warn(e);
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
