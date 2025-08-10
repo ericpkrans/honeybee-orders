@@ -79,11 +79,13 @@
 
       <div class="grid">
         <section class="panel">
-          <h2>Flavor Guide</h2>
-          <p>Browse our seasonal lineup and classics.</p>
-          <!-- If you have a PDF in /static/guide/flavor-guide.pdf -->
-          <a class="btn" href="{% static 'guide/flavor-guide.pdf' %}" target="_blank" rel="noopener">Open PDF</a>
+            <h2>Flavor Guide</h2>
+            <p>Browse our seasonal lineup and classics.</p>
+            <img src="{% static 'guide/flavor-guide.jpg' %}" 
+                alt="Honeybee Bakehouse Flavor Guide" 
+                style="max-width:100%; height:auto; border-radius:8px;">
         </section>
+
 
         <aside class="panel">
           <h2>Follow Along</h2>
@@ -105,19 +107,38 @@
     </div>
 
     <!-- Theme music (muted autoplay to satisfy browsers). Replace file path once you add your mp3. -->
-    <audio id="theme" src="{% static 'audio/theme.m4a' %}" autoplay muted loop></audio>
+    <audio id="theme" src="{% static 'audio/theme.mp3' %}" autoplay muted loop></audio>
     <script>
-      const audio = document.getElementById('theme');
-      const btn = document.getElementById('muteBtn');
-      function update(){
-        btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
+  const audio = document.getElementById('theme');
+  const btn = document.getElementById('muteBtn');
+
+  // Try to start playback muted on load (OK per browser policies)
+  window.addEventListener('DOMContentLoaded', () => {
+    audio.muted = true;
+    audio.play().catch(()=>{ /* ignore autoplay errors */ });
+    update();
+  });
+
+  function update(){
+    btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
+  }
+
+  btn.addEventListener('click', async () => {
+    try {
+      if (audio.muted) {
+        audio.muted = false;
+        await audio.play();   // user gesture -> allowed
+      } else {
+        audio.muted = true;
+        audio.pause();
       }
-      btn.addEventListener('click', () => {
-        audio.muted = !audio.muted;
-        if (!audio.muted) { audio.play().catch(()=>{}); }
-        update();
-      });
-      update();
-    </script>
+    } catch(e) {
+      // If it still fails, keep it muted and update the label
+      audio.muted = true;
+    }
+    update();
+  });
+</script>
+
   </body>
 </html>
