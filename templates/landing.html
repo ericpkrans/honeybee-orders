@@ -35,11 +35,13 @@
     }
     .wrap { max-width:960px; margin:0 auto; padding:24px; }
 
+    /* Header */
     header { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:8px; text-align:center; }
     header img { width:140px; height:auto; filter: drop-shadow(0 2px 0 rgba(0,0,0,.05)); }
     .headline { font-size:clamp(28px,4.6vw,46px); line-height:1.08; margin:6px 0 0; }
     .sub { margin:6px 0 0; font-size:1.08rem; color:var(--ink-soft); }
 
+    /* CTAs & Buttons */
     .cta { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:22px 0; }
     .btn {
       border:none; border-radius:999px; padding:.9rem 1.25rem; font-weight:700;
@@ -51,6 +53,7 @@
     .btn.club { background:var(--club); color:#fff; }
     .btn.download { background:#fff; border:1px solid #cbbf88; }
 
+    /* Panels */
     .panel {
       background:var(--card); border-radius:16px; padding:18px; box-shadow:0 4px 0 var(--border);
       margin:18px 0; display:flex; flex-direction:column; gap:8px;
@@ -58,24 +61,50 @@
     .panel h2 { margin:.2rem 0 4px 0; }
     .muted { color:#6a5f54; }
 
-    /* Two-column row: guarantee equal heights on desktop */
+    /* Two-column row (equal height on desktop) */
     .grid { display:grid; grid-template-columns:1fr; gap:16px; }
     @media (min-width:900px){
       .grid { grid-template-columns:2fr 1fr; align-items:stretch; }
-      .grid > * { display:flex; }          /* grid items become flex to stretch children */
-      .grid > * > .panel { height:100%; }  /* panels fill the grid row height */
+      .grid > * { display:flex; }
+      .grid > * > .panel { height:100%; }
     }
 
-    /* Audio control */
-    .audio-controls { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:-8px; }
-    .audio-controls button {
-      background:var(--sky); color:white; border:none; border-radius:999px; padding:.4rem .7rem; font-weight:700; cursor:pointer;
+    /* Music panel: full width, centered; shrinks & sticks after play */
+    .music-panel {
+      width:100%;
+      background:var(--sky);
+      color:white;
+      padding:10px 14px;
+      border-radius:12px;
+      text-align:center;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 2px 0 rgba(0,0,0,.08);
+      margin:0 0 16px 0;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .25s ease;
+      user-select:none;
+    }
+    .music-panel:hover { background:#5d8ec0; }
+    .music-panel.minimized {
+      padding:6px 12px;
+      font-size:.95rem;
+      opacity:.96;
+      margin-bottom:10px;
+      border-radius:999px;
+      width:max-content;         /* shrink to content */
+      position:sticky;           /* stick under top on scroll */
+      top:8px;
+      left:0; right:0;
+      margin-left:auto; margin-right:auto;  /* keep centered */
+      z-index:50;
+      box-shadow:0 6px 20px rgba(0,0,0,.12);
     }
 
     /* Images */
     .flavor-guide { max-width:100%; height:auto; border-radius:8px; box-shadow:0 6px 24px rgba(0,0,0,.08); }
 
-    /* Facebook button (compact with logo) */
+    /* Facebook button */
     .btn.icon { display:inline-flex; align-items:center; gap:8px; line-height:1; padding:.75rem 1rem; }
     .btn.fb { background:#1877F2; color:#fff; }
     .btn.fb svg { width:18px; height:18px; display:block; }
@@ -85,12 +114,11 @@
     ul.clean li { margin:.35rem 0; }
     .kicker { font-weight:700; }
 
-    .badge { display:inline-block; background:#fff; border:1px solid #e3e3e3; border-radius:999px; padding:.35rem .7rem; font-weight:700; }
     footer { margin:26px 0; text-align:center; font-size:.95rem; color:#5b5146; }
 
-    /* Center contents in Follow Along panel vertically */
+    /* Center Follow Along content vertically */
     .follow-content {
-      flex: 1;
+      flex:1;
       display:flex;
       flex-direction:column;
       justify-content:center;
@@ -99,8 +127,10 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="audio-controls">
-      <button id="muteBtn" aria-label="Toggle music">Unmute ♪</button>
+
+    <!-- Music panel (click to play/pause; shrinks & sticks after first play) -->
+    <div id="musicPanel" class="music-panel" role="button" tabindex="0" aria-live="polite" aria-label="Click to listen to our song">
+      🎵 Click to listen to our song
     </div>
 
     <header>
@@ -174,10 +204,6 @@
       </div>
     </div>
 
-    <p class="muted" style="text-align:center;margin:8px 0 0;">
-      <span class="badge">🐝 Made with love in overalls</span>
-    </p>
-
     <footer>
       © {% now "Y" %} Honeybee Bakehouse • Join the <strong>Southern Sweets Club</strong> for 6 free snickerdoodles
     </footer>
@@ -187,33 +213,35 @@
 
   <script>
     const audio = document.getElementById('theme');
-    const btn = document.getElementById('muteBtn');
-    function updateButton(){
-      btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
-    }
-    window.addEventListener('DOMContentLoaded', async () => {
+    const panel = document.getElementById('musicPanel');
+
+    // Toggle play/pause + minimize & stick after first successful play
+    let started = false;
+
+    async function toggleMusic(){
       try {
-        audio.muted = true;
-        await audio.play().catch(()=>{});
-      } finally {
-        updateButton();
-      }
-    });
-    btn.addEventListener('click', async () => {
-      try {
-        if (audio.muted) {
+        if (audio.muted || audio.paused) {
           audio.muted = false;
-          audio.currentTime = audio.currentTime || 0;
           await audio.play();
+          panel.textContent = "🎵 Now playing — tap to pause";
+          panel.setAttribute('aria-label', 'Now playing — tap to pause');
+          if (!started) {
+            panel.classList.add('minimized'); // shrink & sticky
+            started = true;
+          }
         } else {
-          audio.muted = true;
           audio.pause();
+          panel.textContent = "⏸️ Paused — tap to resume";
+          panel.setAttribute('aria-label', 'Paused — tap to resume');
         }
-      } catch {
-        audio.muted = true;
-      } finally {
-        updateButton();
+      } catch(e) {
+        // ignore autoplay errors (e.g., if user blocks media)
       }
+    }
+
+    panel.addEventListener('click', toggleMusic);
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMusic(); }
     });
   </script>
 </body>
