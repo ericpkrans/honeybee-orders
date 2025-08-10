@@ -1,5 +1,5 @@
 {% load static %}
-{% static 'img/logo.png' as logo_path %}
+{% static 'img/logo-v2.png' as logo_path %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -45,9 +45,7 @@
       /* Panels & grid */
       .panel{
         background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
-        /* Remove vertical margins so both columns align perfectly */
         margin:0;
-        /* Make panel stretch to full row height and allow inner flex */
         height:100%; display:flex; flex-direction:column;
       }
       .grid{display:grid;grid-template-columns:1fr;gap:16px; margin:18px 0}
@@ -64,17 +62,10 @@
       /* Flavor guide image */
       .flavor-guide{max-width:100%;height:auto;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
 
-      /* Facebook embed: responsive + fill remaining height */
+      /* Facebook iframe: fill remaining height in panel */
       #fbPanel { display:flex; flex-direction:column; }
-      .fb-wrap { width: 100%; display:flex; flex:1 1 auto; min-height:200px; }
-      .panel .fb-page,
-      .panel .fb_iframe_widget,
-      .panel .fb_iframe_widget span,
-      .panel .fb_iframe_widget iframe {
-        width: 100% !important;
-        border-radius: 8px;
-      }
-      .panel .fb_iframe_widget { margin-bottom: 0 !important; }
+      .fb-wrap { width:100%; flex:1 1 auto; min-height:250px; display:flex; }
+      #fbFrame { width:100%; border:0; border-radius:8px; flex:1 1 auto; }
     </style>
   </head>
   <body>
@@ -84,7 +75,7 @@
       </div>
 
       <header>
-        <img src="{% static 'img/logo.png' %}" alt="Honeybee Bakehouse logo" loading="eager" fetchpriority="high">
+        <img src="{% static 'img/logo-v2.png' %}" alt="Honeybee Bakehouse logo" loading="eager" fetchpriority="high">
         <div>
           <h1>Honeybee Bakehouse</h1>
           <p class="sub">Cupcakes & Cookies • Small-batch • Made with love</p>
@@ -123,30 +114,21 @@
           </div>
         </section>
 
-        <!-- RIGHT: Follow Along (Facebook Page Plugin) -->
+        <!-- RIGHT: Follow Along (Facebook Page Plugin via iframe, no SDK) -->
         <aside id="fbPanel" class="panel">
           <h2 id="fbHeading">Follow Along</h2>
 
           <div class="fb-wrap">
-            <div
-              id="fbPage"
-              class="fb-page"
-              data-href="https://www.facebook.com/profile.php?id=61576102571602"
-              data-tabs="timeline"
-              data-width="500"
-              data-height="450"     <!-- initial, will be resized by JS -->
-              data-small-header="true"
-              data-adapt-container-width="true"
-              data-hide-cover="false"
-              data-show-facepile="false">
-              <blockquote
-                cite="https://www.facebook.com/profile.php?id=61576102571602"
-                class="fb-xfbml-parse-ignore">
-                <a href="https://www.facebook.com/profile.php?id=61576102571602">
-                  Honeybee Bakehouse on Facebook
-                </a>
-              </blockquote>
-            </div>
+            <!-- Replace the href below with your canonical Page URL if you set a username.
+                 Using profile.php?id=... works if the page is PUBLIC. -->
+            <iframe
+              id="fbFrame"
+              title="Honeybee Bakehouse on Facebook"
+              scrolling="yes"
+              allowtransparency="true"
+              allow="encrypted-media"
+              src="https://www.facebook.com/plugins/page.php?href={{ 'https://www.facebook.com/profile.php?id=61576102571602'|urlencode }}&tabs=timeline&width=500&height=450&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+            ></iframe>
           </div>
 
           <p id="fbNote" style="font-size:.95rem;color:#6a5f54;margin-top:10px;">
@@ -159,12 +141,6 @@
         © {% now "Y" %} Honeybee Bakehouse • Join the <strong>Southern Sweets Club</strong> for 6 free snickerdoodles
       </footer>
     </div>
-
-    <!-- Facebook SDK (load once, async) -->
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous"
-      src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0">
-    </script>
 
     <!-- Theme music -->
     <audio id="theme" src="{% static 'audio/theme.mp3' %}" preload="auto" autoplay muted loop></audio>
@@ -205,49 +181,35 @@
         }
       });
 
-      // --- Facebook panel height sync with Flavor panel ---
+      // --- Make Facebook iframe match Flavor panel height ---
       function resizeFBHeight(){
         const fbPanel = document.getElementById('fbPanel');
         const heading = document.getElementById('fbHeading');
         const note = document.getElementById('fbNote');
-        const fbPage = document.getElementById('fbPage');
+        const frame = document.getElementById('fbFrame');
+        if (!fbPanel || !heading || !note || !frame) return;
 
-        if (!fbPanel || !heading || !note || !fbPage) return;
-
-        // Available height inside the panel for the FB widget
         const panelHeight = fbPanel.clientHeight;
-        const used = heading.offsetHeight + note.offsetHeight + 32; // 32px approx spacing/padding
-        const available = Math.max(250, panelHeight - used);
+        const used = heading.offsetHeight + note.offsetHeight + 32; // padding/spacing allowance
+        const available = Math.max(300, panelHeight - used);
 
-        // Update the data-height and ask Facebook to re-render
-        const current = parseInt(fbPage.getAttribute('data-height') || '0', 10);
-        if (Math.abs(available - current) > 10) { // avoid thrashing
-          fbPage.setAttribute('data-height', String(available));
-          if (window.FB && FB.XFBML && FB.XFBML.parse) {
-            FB.XFBML.parse(fbPanel);
-          }
+        // Update iframe src height param & CSS height
+        const url = new URL(frame.src);
+        if (url.searchParams.get('height') !== String(available)) {
+          url.searchParams.set('height', String(available));
+          frame.src = url.toString();
         }
+        frame.style.height = available + 'px';
       }
 
-      // Recalculate when the flavor image loads (so left column height is known)
       const flavorImg = document.getElementById('flavorImage');
       if (flavorImg && !flavorImg.complete) {
-        flavorImg.addEventListener('load', () => {
-          setTimeout(resizeFBHeight, 100);
-        });
+        flavorImg.addEventListener('load', () => setTimeout(resizeFBHeight, 100));
       } else {
-        // image already loaded from cache
         setTimeout(resizeFBHeight, 100);
       }
-
-      // Recalculate after FB SDK is ready (it sets FB global)
-      window.addEventListener('load', () => {
-        setTimeout(resizeFBHeight, 200);
-      });
-      // And on window resize
-      window.addEventListener('resize', () => {
-        setTimeout(resizeFBHeight, 150);
-      });
+      window.addEventListener('load', () => setTimeout(resizeFBHeight, 150));
+      window.addEventListener('resize', () => setTimeout(resizeFBHeight, 150));
     </script>
   </body>
 </html>
