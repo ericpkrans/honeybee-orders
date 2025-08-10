@@ -21,7 +21,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -67,23 +67,20 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# --- Static files ---
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]  # look here during development
+STATIC_ROOT = BASE_DIR / "staticfiles"    # collectstatic target (production)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Email
-# settings.py — Email (SendGrid)
-from decouple import config
-
+# --- Email (SendGrid) ---
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "apikey"  # <- literally the word "apikey"
-EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")  # set this in your env
-
-# who the emails come from + where the business receives orders
+EMAIL_HOST_USER = "apikey"  # literally the word "apikey"
+EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="honeybeebake.mail@gmail.com")
 BUSINESS_EMAIL = config("BUSINESS_EMAIL", default="honeybeebake.mail@gmail.com")

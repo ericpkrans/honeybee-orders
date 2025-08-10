@@ -7,11 +7,10 @@
     <title>Honeybee Bakehouse — Cupcakes & Cookies</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph (absolute logo URL for previews) -->
     <meta property="og:title" content="Honeybee Bakehouse — Cupcakes & Cookies" />
     <meta property="og:description" content="Order small-batch cupcakes & cookies. Join the Southern Sweets Club for 6 FREE snickerdoodles." />
     <meta property="og:type" content="website" />
-    <!-- Absolute logo URL for link previews -->
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ logo_path }}" />
 
     <!-- Google Font -->
@@ -42,6 +41,7 @@
       .btn.order{background:var(--honey)}
       .btn.club{background:var(--leaf);color:white}
       .btn.download{ background:#fff; border:1px solid #e5d08f }
+
       .panel{
         background:white;border-radius:16px;padding:18px;box-shadow:0 4px 0 rgba(0,0,0,.06);
         margin:18px 0;
@@ -82,7 +82,7 @@
         <section class="panel">
           <h2>Flavor Guide</h2>
           <p>Browse our seasonal lineup and classics.</p>
-          <!-- NOTE: file path updated to /static/docs/ -->
+
           <img
             class="flavor-guide"
             src="{% static 'docs/flavor-guide.jpg' %}"
@@ -90,6 +90,17 @@
             loading="eager"
             fetchpriority="high"
           >
+
+          <div style="margin-top:12px;">
+            <a
+              class="btn download"
+              href="{% static 'docs/flavor-guide.jpg' %}"
+              download="Honeybee-Flavor-Guide.jpg"
+              aria-label="Download the Honeybee Bakehouse Flavor Guide as a JPG"
+            >
+              ⬇️ Download flavor guide
+            </a>
+          </div>
         </section>
 
         <aside class="panel">
@@ -117,30 +128,35 @@
       const audio = document.getElementById('theme');
       const btn = document.getElementById('muteBtn');
 
-      // Start playback muted on load; most browsers allow muted autoplay.
-      window.addEventListener('DOMContentLoaded', () => {
-        audio.muted = true;
-        audio.play().catch(() => { /* ignore autoplay errors */ });
-        updateButton();
-      });
-
       function updateButton(){
         btn.textContent = audio.muted ? 'Unmute ♪' : 'Mute ✖';
       }
 
+      window.addEventListener('DOMContentLoaded', async () => {
+        try {
+          audio.muted = true;                 // muted autoplay should be allowed
+          await audio.play().catch(()=>{});
+        } finally {
+          updateButton();
+        }
+      });
+
       btn.addEventListener('click', async () => {
         try {
           if (audio.muted) {
-            audio.muted = false;      // user gesture -> permitted
+            audio.muted = false;              // user gesture -> allowed
+            audio.currentTime = audio.currentTime || 0;
             await audio.play();
           } else {
             audio.muted = true;
             audio.pause();
           }
         } catch (e) {
-          audio.muted = true;         // fallback if something fails
+          console.warn('Playback failed:', e);
+          audio.muted = true;
+        } finally {
+          updateButton();
         }
-        updateButton();
       });
     </script>
   </body>
