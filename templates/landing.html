@@ -9,7 +9,7 @@
 
   <!-- Open Graph (absolute logo URL for previews) -->
   <meta property="og:title" content="Honeybee Bakehouse — Cupcakes & Cookies" />
-  <meta property="og:description" content="Whimsical cupcakes & cookies made from scratch in Bellevue, Nebraska." />
+  <meta property="og:description" content="Southern cupcakes & cookies made from scratch in Bellevue, Nebraska." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ logo_path }}" />
 
@@ -33,10 +33,12 @@
       font-family:"Quicksand", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
     .wrap{max-width:960px;margin:0 auto;padding:24px}
+
     header{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:8px;text-align:center}
     header img{width:140px;height:auto;filter: drop-shadow(0 2px 0 rgba(0,0,0,.05));}
     .headline{font-size:clamp(28px,4.6vw,46px);line-height:1.08;margin:6px 0 0}
     .sub{margin:6px 0 0;font-size:1.08rem;color:var(--ink-soft)}
+
     .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:22px 0}
     .btn{
       border:none;border-radius:999px;padding:.9rem 1.25rem;font-weight:700;
@@ -93,8 +95,8 @@
     <!-- Header -->
     <header>
       <img src="{% static 'img/logo-v2.png' %}" alt="Honeybee Bakehouse logo" loading="eager" fetchpriority="high">
-      <h1 class="headline">Hey, y’all! Welcome to Honeybee Bakehouse 🐝</h1>
-      <p class="sub">Whimsical cupcakes & cookies made from scratch in Bellevue, Nebraska.</p>
+      <h1 class="headline">Welcome to the Honeybee Bakehouse</h1>
+      <p class="sub">Southern cupcakes & cookies made from scratch in Bellevue, Nebraska.</p>
     </header>
 
     <!-- Primary CTAs -->
@@ -105,26 +107,18 @@
 
     <!-- About -->
     <section class="panel">
-      <h2>A Taste of Home, Straight from the Hive</h2>
-      <p>I’m Kelly—baker, mama, and believer in the power of <strong>cream cheese</strong> frosting. At Honeybee Bakehouse, everything’s homemade with love (and a little sass), right here in my country kitchen. I use local ingredients, bake in small batches, and keep things simple and sweet.</p>
+      <h2>A Taste of Home</h2>
+      <p>Hey y’all, I’m Kelly—a mama of five with a heart full of faith, a home full of love, and an oven always ready to share something sweet. At Honeybee Bakehouse, everything’s homemade with love (and a little sass), right here in my country kitchen. I use local ingredients, bake in small batches, and keep things simple and sweet.</p>
 
       <p class="kicker">Why folks love Honeybee Bakehouse:</p>
       <ul class="clean">
-        <li>Cream cheese frosting (less sugar, better flavor)</li>
+        <li>Whipped cream cheese <strong>icing</strong> (less sugar, better flavor)</li>
+        <li>I sell icing by the tub</li>
         <li>Seasonal and holiday flavors</li>
         <li>Optional filled cupcakes <em>— filling is FREE for military families</em></li>
         <li>Affordable pricing—no storefront overhead!</li>
         <li>Just a 3-day heads up to place your order</li>
       </ul>
-    </section>
-
-    <!-- Menu / CTA -->
-    <section class="panel">
-      <h2>Need a treat for a birthday, event, or just because?</h2>
-      <p>🍰 <strong>Cupcakes & Cookies</strong> &nbsp; · &nbsp; 🎉 <strong>Made for Events, Gifting & Everyday Joy</strong> &nbsp; · &nbsp; 🐝 <strong>Military discount on filled cupcakes</strong></p>
-      <div class="cta" style="margin-top:10px">
-        <a class="btn order" href="{% url 'home' %}">Browse Menu & Order</a>
-      </div>
     </section>
 
     <!-- Flavor Guide + Follow Along -->
@@ -142,25 +136,23 @@
           fetchpriority="high"
         >
 
-        <div style="margin-top:12px;">
+        <div class="cta" style="margin-top:12px">
+          <a class="btn order" href="{% url 'home' %}">Order Now</a>
           <a
             class="btn download"
             href="{% static 'docs/flavor-guide.jpg' %}"
             download="Honeybee-Flavor-Guide.jpg"
             aria-label="Download the Honeybee Bakehouse Flavor Guide as a JPG"
-          >
-            ⬇️ Download flavor guide
-          </a>
+          >⬇️ Download flavor guide</a>
         </div>
       </section>
 
-      <!-- RIGHT: Follow Along (compact, logo button) -->
+      <!-- RIGHT: Follow Along -->
       <aside class="panel">
         <h2>Follow Along</h2>
         <p class="muted" style="margin-top:4px">Weekly flavors, behind-the-scenes, and giveaways.</p>
         <div style="margin-top:10px">
           <a class="btn icon fb" href="https://www.facebook.com/profile.php?id=61576102571602" target="_blank" rel="noopener">
-            <!-- Facebook logo -->
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor">
               <path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.01 3.66 9.16 8.44 9.94v-7.03H7.9V12.1h2.54V9.86c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.9h2.78l-.44 2.87h-2.34v7.03C18.34 21.22 22 17.07 22 12.06z"/>
             </svg>
@@ -174,10 +166,10 @@
     <section class="panel">
       <h2>Kind Words</h2>
       <blockquote class="muted" style="margin:0 0 8px 0">
-        “These cupcakes were the best I’ve had—moist, flavorful, and adorable! My daughter’s party was a hit.” — <strong>Jessica M.</strong>
+        “I want to dive face first into a swimming pool filled with her icing.” — <strong>Vicky C.</strong>
       </blockquote>
       <blockquote class="muted" style="margin:0">
-        “The frosting is incredible. I’m never going back to store-bought.” — <strong>Amanda G.</strong>
+        “The icing is incredible. I’m never going back to store-bought.” — <strong>Amanda G.</strong>
       </blockquote>
     </section>
 
@@ -195,7 +187,6 @@
   <audio id="theme" src="{% static 'audio/theme.mp3' %}" preload="auto" autoplay muted loop></audio>
 
   <script>
-    // Audio toggle
     const audio = document.getElementById('theme');
     const btn = document.getElementById('muteBtn');
 
@@ -204,7 +195,7 @@
     }
     window.addEventListener('DOMContentLoaded', async () => {
       try {
-        audio.muted = true;                 // muted autoplay should be allowed
+        audio.muted = true;
         await audio.play().catch(()=>{});
       } finally {
         updateButton();
@@ -213,7 +204,7 @@
     btn.addEventListener('click', async () => {
       try {
         if (audio.muted) {
-          audio.muted = false;              // user gesture -> allowed
+          audio.muted = false;
           audio.currentTime = audio.currentTime || 0;
           await audio.play();
         } else {
