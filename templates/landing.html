@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Honeybee Bakehouse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Small-batch treats, baked with love. Order online for pickup or delivery." />
+    <style>
+      :root{
+        --bg:#fffdf7; --ink:#2a1e12; --accent:#f4c21f; --accent2:#ffc86b;
+      }
+      *{box-sizing:border-box}
+      body{margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:var(--bg);}
+      header{padding:40px 20px; text-align:center; background:
+        radial-gradient(1200px 600px at 50% -200px, var(--accent2), transparent 60%)}
+      .logo{max-width:180px; height:auto; display:block; margin:0 auto 16px}
+      h1{margin:0; font-size:clamp(28px, 4vw, 44px); letter-spacing:.5px}
+      .tag{opacity:.8; margin-top:6px}
+      .actions{display:flex; gap:12px; justify-content:center; margin:22px 0 6px; flex-wrap:wrap}
+      .btn{
+        display:inline-block; padding:12px 18px; border-radius:999px; text-decoration:none; font-weight:600;
+        border:2px solid var(--ink); background:#fff; color:var(--ink);
+      }
+      .btn--primary{ background: var(--accent); }
+      main{max-width:1100px; margin:28px auto; padding:0 16px 60px; display:grid; gap:24px; grid-template-columns:1fr; }
+      @media (min-width: 960px){ main{ grid-template-columns: 1.1fr .9fr; } }
+      .card{
+        background:#fff; border:1px solid #e8e2d6; border-radius:16px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,.06);
+      }
+      .card h2{font-size:22px; margin:0; padding:14px 16px; border-bottom:1px solid #f0eae0;}
+      .card .body{padding:14px 16px}
+      iframe{width:100%; height:72vh; border:0}
+      .social{display:flex; gap:10px; flex-wrap:wrap}
+      .social a{padding:10px 14px; border-radius:12px; border:1px solid #e8e2d6; text-decoration:none; color:var(--ink); background:#fff}
+      footer{padding:24px; text-align:center; opacity:.7}
+      .audio-wrap{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+      .hidden{display:none}
+    </style>
+  </head>
+  <body>
+    <header>
+      {% load static %}
+      <img class="logo" src="{% static 'img/logo.png' %}" alt="Honeybee Bakehouse logo" />
+      <h1>Honeybee Bakehouse</h1>
+      <div class="tag">Small-batch treats, baked with love.</div>
+      <div class="actions">
+        <a class="btn btn--primary" href="{% url 'home' %}">Order Now</a>
+        <a class="btn" href="#flavors">Flavor Guide</a>
+      </div>
+
+      <!-- Theme song: try to autoplay; if blocked, show a play button -->
+      <div class="audio-wrap" style="justify-content:center; margin-top:12px">
+        <audio id="themeAudio" preload="auto">
+          <source src="{% static 'audio/theme.mp3' %}" type="audio/mpeg">
+        </audio>
+        <button id="playBtn" class="btn">▶ Play theme</button>
+        <span id="playing" class="hidden">♪ Now playing</span>
+      </div>
+    </header>
+
+    <main>
+      <section id="flavors" class="card">
+        <h2>Flavor Guide</h2>
+        <div class="body" style="padding:0">
+          <!-- Embed the PDF (works best on desktop). A download link is provided too. -->
+          <iframe src="{% static 'docs/flavor-guide.pdf' %}#view=FitH"></iframe>
+          <div class="body">
+            <a class="btn" href="{% static 'docs/flavor-guide.pdf' %}" download>Download PDF</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <h2>Follow Us</h2>
+        <div class="body">
+          <p>Weekly content, new flavors, and behind-the-scenes bakes:</p>
+          <div class="social">
+            <!-- Replace the URLs with your real accounts -->
+            <a href="https://www.instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://www.tiktok.com/@yourhandle" target="_blank" rel="noopener">TikTok</a>
+            <a href="https://facebook.com/yourpage" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://youtube.com/@yourchannel" target="_blank" rel="noopener">YouTube</a>
+            <a href="mailto:honeybeebake.mail@gmail.com">Email Us</a>
+          </div>
+          <p style="margin-top:14px"><a class="btn btn--primary" href="{% url 'home' %}">Start an Order</a></p>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      © {{ now|default:2025 }} Honeybee Bakehouse • Crafted with butter & joy
+    </footer>
+
+    <script>
+      // Try to autoplay on load (many browsers block unmuted autoplay).
+      // If blocked, show a Play button instead.
+      (function () {
+        const audio = document.getElementById('themeAudio');
+        const btn = document.getElementById('playBtn');
+        const playing = document.getElementById('playing');
+
+        // Attempt autoplay after a tick
+        setTimeout(() => {
+          audio.play().then(() => {
+            btn.classList.add('hidden');
+            playing.classList.remove('hidden');
+          }).catch(() => {
+            // Autoplay blocked; user must click.
+            btn.classList.remove('hidden');
+          });
+        }, 100);
+
+        btn.addEventListener('click', async () => {
+          try {
+            await audio.play();
+            btn.classList.add('hidden');
+            playing.classList.remove('hidden');
+          } catch (e) {
+            alert("Tap again to allow audio to play.");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

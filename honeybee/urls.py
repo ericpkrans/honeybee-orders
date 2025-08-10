@@ -1,10 +1,10 @@
-# honeybee/urls.py
 from django.contrib import admin
 from django.urls import path
-from orderform.views import home, thanks  # <- import 'thanks', not 'order_success'
+from orderform.views import landing, home, thanks
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", home, name="home"),
-    path("thanks/", thanks, name="thanks"),  # <- route name used by views.py redirect
+    path("", landing, name="landing"),        # new landing page at /
+    path("order/", home, name="home"),        # order form moved here
+    path("thanks/", thanks, name="thanks"),
 ]
