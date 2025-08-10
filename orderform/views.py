@@ -217,6 +217,33 @@ def thanks(request):
 def landing(request):
     return render(request, "landing.html")
 
+# --- Landing + Rewards pages ---
+
+def landing_page(request):
+    # Simple render; assets and audio handled in the template
+    return render(request, "landing.html")
+
+def rewards(request):
+    if request.method == "POST":
+        # Optional: capture email and notify business inbox
+        email = request.POST.get("email", "").strip()
+        name = request.POST.get("name", "").strip()
+        if email:
+            subject = "New Southern Sweets Club signup"
+            body = f"Name: {name or '(not provided)'}\nEmail: {email}\n"
+            send_mail(
+                subject=subject,
+                message=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.BUSINESS_EMAIL],
+                fail_silently=False,
+            )
+        return redirect("rewards_thanks")
+    return render(request, "rewards.html")
+
+def rewards_thanks(request):
+    return render(request, "rewards_thanks.html")
+
 
 def rewards(request):
     if request.method == "POST":
