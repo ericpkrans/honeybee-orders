@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path
-from orderform.views import OrderCreate, thanks
+from orderform.views import home, order_success
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", OrderCreate.as_view(), name="order_form"),
-    path("thanks/", thanks, name="thanks"),
+    path("", home, name="home"),
+    path("success/", order_success, name="order_success"),
 ]

@@ -74,16 +74,16 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Email
-EMAIL_BACKEND = config(
-    "EMAIL_BACKEND",
-    default="django.core.mail.backends.console.EmailBackend",
-)
+# settings.py — Email (SendGrid)
+from decouple import config
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "apikey"  # <- literally the word "apikey"
+EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")  # set this in your env
+
+# who the emails come from + where the business receives orders
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="honeybeebake.mail@gmail.com")
 BUSINESS_EMAIL = config("BUSINESS_EMAIL", default="honeybeebake.mail@gmail.com")
-
-# Optional Gmail SMTP (used only if you switch EMAIL_BACKEND in .env)
-EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com")
-EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
