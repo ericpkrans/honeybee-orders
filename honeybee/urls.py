@@ -1,10 +1,10 @@
-from django.contrib import admin
 from django.urls import path
-from orderform.views import landing, home, thanks
+from orderform import views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", landing, name="landing"),        # new landing page at /
-    path("order/", home, name="home"),        # order form moved here
-    path("thanks/", thanks, name="thanks"),
+    path("", views.home, name="home"),
+    path("thanks/", views.thanks, name="thanks"),
+    path("landing/", views.landing, name="landing"),
+    path("rewards/", views.rewards, name="rewards"),
+    path("rewards/thanks/", views.rewards_thanks, name="rewards_thanks"),
 ]
